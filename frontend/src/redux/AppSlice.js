@@ -2,10 +2,22 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const production_url = "https://screentimeproject.herokuapp.com/"
 
+const get_api_url = () => {
+    if (process.env.NODE_ENV === 'production'){
+        const url = "https://screentimeproject.herokuapp.com/"
+        return url
+    }else{
+        const url = "https://localhost:5000/"
+        return url
+    }
+}
+
+const url = get_api_url()
+
 export const getAppsAsync = createAsyncThunk(
 	'apps/getAppsAsync',
 	async () => {
-		const resp = await fetch(`${production_url}api/apps`);
+		const resp = await fetch(`${url}api/apps`);
 		if (resp.ok) {
 			const apps = await resp.json();
 			return { apps };
@@ -15,7 +27,7 @@ export const getAppsAsync = createAsyncThunk(
 
 export const getAppDetails = createAsyncThunk('apps/getAppDetail', 
     async (payload) => {
-        const response = await fetch(`${production_url}api/apps/${payload.app}`)
+        const response = await fetch(`${url}api/apps/${payload.app}`)
         if (response.ok) {
             const apps = await response.json()
             return { apps }
@@ -25,7 +37,7 @@ export const getAppDetails = createAsyncThunk('apps/getAppDetail',
 
 export const getDates = createAsyncThunk('apps/getDates', 
     async (payload) => {
-        const response = await fetch(`${production_url}api/apps/dates`)
+        const response = await fetch(`${url}api/apps/dates`)
         if (response.ok){
             const dates = await response.json()
             return { dates }
@@ -36,7 +48,7 @@ export const getDates = createAsyncThunk('apps/getDates',
 export const getAppsOnDate = createAsyncThunk('apps/getAppsOndate',
     async(payload) => {
         const date = payload.date
-        const response = await fetch(`${production_url}/api/apps/dates/${date}`)
+        const response = await fetch(`${url}/api/apps/dates/${date}`)
         if (response.ok){
             const appsOnDate = await response.json()
             return { appsOnDate }
