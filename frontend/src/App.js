@@ -5,6 +5,7 @@ import About from './components/About'
 import Dates from './components/Dates'
 import AppsOnDate from './components/AppsOnDate'
 import Navbar from './components/Navbar';
+import NotFound from './components/NotFound'
 import {io} from "socket.io-client"
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
 					<Route path = "/dates" element = {<Dates/>}/>
 					<Route path = "/:app" element = {<AppDetails socket = { connectToSocket() }/>}/>
 					<Route path = "/dates/:date" element = {<AppsOnDate/>}/>
+					<Route path = "*" element = {<NotFound/>}/>
 				</Routes>
 			</div>
 			<Navbar/>
