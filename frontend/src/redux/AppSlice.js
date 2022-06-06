@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import NotFound from '../components/NotFound';
 
 const production_url = "https://screentimeproject.herokuapp.com/"
 
@@ -7,7 +8,7 @@ const get_api_url = () => {
         const url = "https://screentimeproject.herokuapp.com/"
         return url
     }else{
-        const url = "https://localhost:5000/"
+        const url = "http://localhost:5000/"
         return url
     }
 }
@@ -26,12 +27,23 @@ export const getAppsAsync = createAsyncThunk(
 );
 
 export const getAppDetails = createAsyncThunk('apps/getAppDetail', 
-    async (payload) => {
-        const response = await fetch(`${url}api/apps/${payload.app}`)
-        if (response.ok) {
-            const apps = await response.json()
-            return { apps }
+    async (payload, thunkAPI) => {
+        try {
+            const response = await fetch(`${url}api/apps/${payload.app}`)
+            if (response.ok) {
+                const apps = await response.json()
+                return { apps }
+            }
+            if (response.status === 404) {
+                return thunkAPI.rejectWithValue(response.status)
+            }
+        }  catch (err) {
+            if (!err.response) {
+              throw err
+            }
+            return thunkAPI.rejectWithValue(err.response.data)
         }
+        
     }
 )
 
@@ -46,12 +58,15 @@ export const getDates = createAsyncThunk('apps/getDates',
 )
 
 export const getAppsOnDate = createAsyncThunk('apps/getAppsOndate',
-    async(payload) => {
+    async(payload, thunkAPI) => {
         const date = payload.date
-        const response = await fetch(`${url}/api/apps/dates/${date}`)
+        const response = await fetch(`${url}api/apps/dates/${date}`)
         if (response.ok){
             const appsOnDate = await response.json()
             return { appsOnDate }
+        }
+        if (!response.ok){
+            return thunkAPI.rejectWithValue(response.status)
         }
     }
 )
@@ -65,6 +80,7 @@ export const AppSlice = createSlice({
         dates: [],
         appsOnDate: [{}],
         isLoading: false,
+        is404: false,
         appNameOrder: "",
         appRuntimeOrder: "",
         appDateOrder: "",
@@ -73,6 +89,7 @@ export const AppSlice = createSlice({
 	reducers: {
         reset: (state) => {
             state.isLoading = false
+            state.is404 = false
         },
         updateTimeSpan: (state, action) => {
             const timespan = action.payload.new_timespan
@@ -243,6 +260,10 @@ export const AppSlice = createSlice({
                 state.appRuntimeOrder = "DSC"
                 state.appDateOrder = "DSC"
             })
+            .addCase(getAppDetails.rejected, (state, action) => {
+                state.is404 = true
+                state.isLoading = false
+            })
             .addCase(getDates.pending, (state) => {
                 state.isLoading = true
             })
@@ -257,6 +278,12 @@ export const AppSlice = createSlice({
             .addCase(getAppsOnDate.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.appsOnDate = action.payload.appsOnDate
+            })
+            .addCase(getAppsOnDate.rejected, (state, action) => {
+                state.isLoading = false
+                if (action.payload === 404){
+                    state.is404 = true
+                }
             })
 	},
 });

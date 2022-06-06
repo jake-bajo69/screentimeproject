@@ -3,6 +3,7 @@ import { useEffect } from "react"
 import { useSelector, useDispatch } from 'react-redux';
 import { getAppDetails, updateAppDetailsTimeSpan, sortRuntime, sortAppDate } from '../redux/AppSlice'
 import LoadingSpinner from './LoadingSpinner'
+import NotFound from "./NotFound";
 
 var ReactDOM = require('react-dom');
 
@@ -11,7 +12,7 @@ const AppDetails = ({ socket }) => {
 
     const dispatch = useDispatch();
 
-    const { appdetails, appdetailss, isLoading } = useSelector((state) => state.fetchAppsData);
+    const { appdetails, appdetailss, isLoading, is404 } = useSelector((state) => state.fetchAppsData);
 
     useEffect(() => {
 		dispatch(getAppDetails({ app }));
@@ -40,6 +41,8 @@ const AppDetails = ({ socket }) => {
 
     if (isLoading) {
         return <LoadingSpinner/>
+    } else if (is404){
+        return  <NotFound/>
     }else{
         return (
             <div className="content">
