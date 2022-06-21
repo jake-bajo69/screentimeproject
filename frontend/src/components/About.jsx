@@ -5,8 +5,8 @@ const About = () => {
     return (
         <div className="about-container">
             <div className="about-description">
-              <p>This web app displays and organizes my laptop applications' screen time. </p>
-              <p>The applications you see are whitelisted applications due to reasons.</p>
+              <p>IDK</p>
+              <p>The applications you see are whitelisted due to reasons.</p>
             </div>
             <div className="about-tech">
               <h4>MongoDB</h4>
