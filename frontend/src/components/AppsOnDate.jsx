@@ -15,7 +15,7 @@ const AppsOnDate = () => {
     useEffect(() => {
         dispatch(getAppsOnDate({date: date}))
     }, [dispatch])
-
+ 
     if (isLoading){
         return <LoadingSpinner/>
     }else if (is404){
@@ -34,7 +34,6 @@ const AppsOnDate = () => {
             </div>
         )
     }
-
 }
 
 export default AppsOnDate
