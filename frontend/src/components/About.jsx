@@ -5,8 +5,7 @@ const About = () => {
     return (
         <div className="about-container">
             <div className="about-description">
-              <p>IDK</p>
-              <p>The applications you see are whitelisted due to reasons.</p>
+              <p>This web app displays my applications' screentime. I set up a local python script in my machine for recording my screentime and for uploading it to the database. The applications you see are whitelisted due to reasons.</p>
             </div>
             <div className="about-tech">
               <h4>MongoDB</h4>
